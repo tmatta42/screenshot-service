@@ -1,13 +1,17 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
+const chromium = require('@sparticuz/chromium');
 const app = express();
 app.use(express.json());
 
 app.post('/screenshot', async (req, res) => {
-  const { urls } = req.body; // expects { "urls": ["https://...", ...] }
+  const { urls } = req.body;
 
   const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(),
+    headless: chromium.headless,
   });
 
   const results = [];
